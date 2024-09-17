@@ -1,0 +1,285 @@
+﻿@using SubuProtokol.Core.Enums
+
+@model SubuProtokol.WEBUI.Models.ProtokolQuery
+@{
+    var modelid = ViewBag.ıd;
+    Layout = "~/Views/Shared/_LayoutFull.cshtml";
+
+    var urlAdresi2 = (Model != null && !string.IsNullOrEmpty(Model.FileKey)) ? $"https://dl.sabis.subu.edu.tr/u/{Model.FileKey.Substring(3)}" : "";
+}
+
+
+
+@*<div class="container">
+    <div class="row message-wrapper rounded shadow mb-20">
+        <div class="col-md-12 message-sideright">*@
+
+<div class="panel">
+    @using (Html.BeginForm("Update", "ProtokolAdmin", FormMethod.Post, new { enctype = "multipart/form-data", id = "id" }))
+    {
+        <input type="hidden" name="id" value="@modelid" />
+        <div class="form-group row">
+            <div class="col-md-6">
+                <label class="font-weight-bold"><strong>Protokol İlgili Olduğu Ana Süreç</strong></label><span class="text-danger">* </span>
+                <br>
+                <br>
+                @Html.DropDownListFor(Model => Model.MainSurec, Enum.GetValues(typeof(enumprotokolmainsurec)).Cast<enumprotokolmainsurec>().Select(x => new SelectListItem { Value = ((int)(enumprotokolmainsurec)x).ToString(), Text = x.GetDisplayNamemainsurec() }), "Seçim yapınız",new{style="width:624px;height:39px;"})
+            </div>
+            <div class="col-sm-6">
+                <label class="font-weight-bold"><strong>Protokol Ana Türü</strong></label><span class="text-danger"> *</span>
+                <br>
+                <br>
+                @Html.DropDownListFor(Model => Model.MainType, Enum.GetValues(typeof(EnumProtokolMainType)).Cast<EnumProtokolMainType>().Select(x => new SelectListItem { Value = ((int)(EnumProtokolMainType)x).ToString(), Text = x.GetDisplayName() }), "Seçim yapınız",new{style="width:624px;height:39px;"})
+            </div>
+        </div>
+        <br />
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label class="font-weight-bold"><strong>Kurum Türü</strong></label><span class="text-danger">* </span>
+                <br>
+                <br>
+                @Html.DropDownListFor(Model => Model.DepartmantType, Enum.GetValues(typeof(EnumDepartmentType)).Cast<EnumDepartmentType>().Select(x => new SelectListItem { Value = ((int)(EnumDepartmentType)x).ToString(), Text = x.GetDisplayNamedepartmenttype() }), "Seçim yapınız",new{style="width:624px;height:39px;"})
+            </div>
+            <div class="col-sm-6">
+                <label class="font-weight-bold"><strong>Protokol Alt Türü</strong></label><span class="text-danger">* </span>
+                <br>
+                <br>
+                @Html.DropDownListFor(Model => Model.UnderType, Enum.GetValues(typeof(EnumProtokolUnderType)).Cast<EnumProtokolUnderType>().Select(x => new SelectListItem { Value = ((int)(EnumProtokolUnderType)x).ToString(), Text = x.GetDisplayNameUnderType() }), "Seçim yapınız",new{style="width:624px;height:39px;"})
+            </div>
+        </div>
+        <br />
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label class="font-weight-bold" asp-for="ProtokoldenSorumluKisi"> <strong>Protokolden Sorumlu Kişi</strong></label><span class="text-danger">* </span>
+                <br />
+                <br />
+                <input asp-for="ProtokoldenSorumluKisi" class="form-control">
+                <span asp-validation-for="ProtokoldenSorumluKisi"></span>
+            </div>
+            <div class="col-sm-6">
+                <label class="font-weight-bold" for="UnitId"><strong>Protokolden Sorumlu Birim</strong></label><span class="text-danger">*</span>
+                <br />
+                <br />
+                <select id="UnitId" name="UnitId" style="width: 624px; height: 39px;">
+                    <option>Seçim Yapınız</option>
+                </select>
+            </div>
+        </div>
+        <br />
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label class="font-weight-bold" asp-for="ProtokolImzalananKurum"><strong>Protokol İmzalanan Kurum</strong></label><span class="text-danger"> *</span>
+                <br />
+                <br />
+                <input asp-for="ProtokolImzalananKurum" id="btn-number" class="form-control">
+                <span asp-validation-for="ProtokolImzalananKurum"></span>
+            </div>
+            <div class="col-sm-6">
+                <label class="font-weight-bold" asp-for="Telefon"><strong>Telefon</strong></label><span class="text-danger">* </span>
+                <br />
+                <br />
+                <input asp-for="Telefon" id="btn-number" class="form-control">
+                <span asp-validation-for="Telefon"></span>
+            </div>
+        </div>
+        <br />
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label asp-for="Scope" class="font-weight-bold"><strong>Protokol Kapsamı</strong></label><span class="text-danger">*</span>
+                <br />
+                <br />
+                <select asp-for="Scope"
+                    class="form-control"
+                    asp-items="Html.GetEnumSelectList<EnumProtokolScope>()">
+                    <option>Seçim Yapınız</option>
+                </select>
+            </div>
+            <div class="col-sm-6">
+                <label asp-for="Sector" class="font-weight-bold"><strong>Sektör</strong></label><span class="text-danger">*</span>
+                <br />
+                <br />
+                <select asp-for="Sector"
+                    asp-items="@(new SelectList(Enum.GetValues(typeof(EnumSector))))"
+                    class="form-control">
+                    <option>Seçim Yapınız</option>
+                </select>
+                <span asp-validation-for="Sector"></span>
+            </div>
+        </div>
+        <br />
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label asp-for="Time" class="font-weight-bold"><strong>Protokol Süresi Otomatik Uzayacak Mı</strong></label><span class="text-danger">*</span>
+                <br />
+                <br />
+                <select asp-for="Time"
+                    asp-items="@(new SelectList(Enum.GetValues(typeof(EnumProtokolTime))))"
+                    class="form-control">
+                    <option>Seçim Yapınız</option>
+                </select>
+                <span asp-validation-for="Time"></span>
+            </div>
+            <div class="col-sm-6">
+                <label class="font-weight-bold" asp-for="Email"><strong>Email/web</strong></label><span class="text-danger">* </span>
+                <br />
+                <br />
+                <input asp-for="Email" type="text" class="form-control">
+                <span asp-validation-for="Email"></span>
+            </div>
+        </div>
+        <br />
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label id="tarih1" asp-for="ProtokolStartTime" class="font-weight-bold"><strong>Protokol İmza Tarihi</strong></label><span class="text-danger">* </span>
+                <br />
+                <br />
+                <input asp-for="ProtokolStartTime" type="date" class="form-control">
+                <span asp-validation-for="ProtokolStartTime"></span>
+            </div>
+            <div class="col-sm-6">
+                <label asp-for="ProtokolFinishTime" class="font-weight-bold"><strong>Protokol Bitiş Tarihi</strong></label><span class="text-danger">* </span>
+                <br />
+                <br />
+                <input asp-for="ProtokolFinishTime" type="date" class="form-control">
+                <span asp-validation-for="ProtokolFinishTime"></span>
+            </div>
+        </div>
+        <br />
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <div class="panel " id="indirim">
+                    <label class="font-weight-bold" asp-for="indirimAciklamasi"><strong>Açıklama</strong></label><span class="text-danger">* </span>
+                    <br />
+                    <br />
+                    <input asp-for="indirimAciklamasi" class="form-control">
+                    <span asp-validation-for="indirimAciklamasi"></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <label class="font-weight-bold"><strong>Protokol İmzalanan Kurum Email</strong></label><span class="text-danger">* </span>
+                <br />
+                <br />
+                <input asp-for="EmailImzalananKurum" type="text" class="form-control">
+                <span asp-validation-for="EmailImzalananKurum"></span>
+            </div>
+            
+        </div>
+        <br />
+        <div class="form-group row">
+            <div class="col-sm-6">
+                <label class="font-weight-bold" asp-for="Konu"><strong>Konu</strong></label><span class="text-danger"> </span>
+                <br />
+                <br />
+                <input asp-for="Konu" class="form-control">
+                <span asp-validation-for="Konu"></span>
+            </div>
+            <div class="col-sm-6">
+                <input class="form-control" type="file" name="File" accept="application/pdf" />
+                @{
+                    if (Model != null)
+                    {
+                        if (!string.IsNullOrEmpty(Model.FileKey))
+                        {
+                           var urlAdresi = Model.FileKey.Substring(3);
+                                           @:<span id="dosyaAdi"></span>
+                                            @:<span>Yüklenen dosyayı indirmek için <a href="https://dl.sabis.subu.edu.tr/u/@urlAdresi" download target="_blank">Tıklayınız</a> </span>
+
+                        }
+                        else
+                        {
+                                            @:<label class="bg-warning" style="color:white;">Dosya Eklenmemiş</label>
+                        }
+                    }
+                }
+                    <br />
+                    <br />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-12">
+                <br>
+                <button style="float: right;  " type="submit" id="btn-kaydet" class="btn btn-primary">Kaydet</button>
+            </div>
+        </div>
+    }
+</div>
+@*     </div><!-- /.message-sideright -->
+    </div>
+</div>*@
+
+@section Styles{
+    <link href="~/lib/quill/quill.snow.css" rel="stylesheet">
+    <link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css" type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js" type="text/javascript"></script>
+
+
+    <link href="~/css/ticket-get.css" rel="stylesheet" />
+}
+
+    @section Scripts{
+    <script>
+        $(function () {
+            var kontrol = false;
+            var x = document.getElementById("indirim");
+            $("#maintype_").change(function () {
+                if ($(this).val().toString() == "İndirimProtokolu") {
+                    x.style.display = "block";
+                }
+                else {
+                    x.style.display = "none";
+                }
+            });
+        });
+
+
+        $(function () {
+            $('#tarih1').datepicker({
+                format: "dd/mm/yyyy"
+            });
+        });
+
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "https://apiprotokol.subu.edu.tr/api/Unit",
+                //url: "https://dk-prj2.subu.edu.tr/api/Unit",
+                dataType: "json",
+                success: function (data) {
+                    // istek başarılı olduğunda burada işlem yapabilirsiniz
+                    var select = $("#UnitId");
+                    select.empty();
+                    select.append($('<option>', { text: "Seçim Yapınız" }));
+                    $.each(data.data, function (index, item) {
+                        select.append($('<option>', {
+                            value: item.id,
+                            text: item.birimAd
+                        }));
+                    });
+                    $("#UnitId option[value='@Model.UnitId']").attr("selected", "selected");
+                },
+                error: function (xhr, status, error) {
+                    // istek başarısız olduğunda burada hata mesajını alabilirsiniz
+                    console.log(error);
+                }
+            });
+
+            let urlAddress = "@Html.Raw(urlAdresi2)";
+        
+            if(urlAddress != "") {
+                $.ajax({
+                    type: "GET",
+                    url: urlAddress,
+                    success: function (data) {
+                        $("#dosyaAdi").text(data.getResponseHeader("Content-Disposition").substring(9));
+                    },
+                    error: function (xhr, status, error) {
+                        // istek başarısız olduğunda burada hata mesajını alabilirsiniz
+                        console.log(error);
+                    }
+                });
+            }
+            
+        });
+    </script>
+}

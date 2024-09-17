@@ -1,0 +1,75 @@
+﻿
+@{
+   
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+<div class="container">
+    <div class="row">
+            <div class="col-lg-4 col-sm-4  col-md-4 col-4">
+            <a href="/"> <img  src="/icon/LOGO.png" align="left" style="width=" 15" height="130" float: leftmargin-lefter:1px; margin-top:2px;margin-bottom:2px;" /> </a>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-4 branding-bar-btn">
+            <a href="https://kesfet.subu.edu.tr" target="_blank" style="background: #20A953 0% 0% no-repeat padding-box;color: #FFFFFF; margin-top:auto;border-radius:25px;
+                                     padding:14px 25px;display:inline-block;text-align:center;height:45px; width:180px;   margin-left:10%;     text-decoration:none;
+                      margin-right:10%;  margin-top:9%;        margin-bottom:20px;  font-size:14px ;  font-weight: bold;  
+
+                     ">SUBÜ'YÜ KEŞFET</a>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-4 branding-bar-motto">
+            <img  src="/icon/MOTTO.png" style="width=" 15" height="130" float: right; border:1px; margin-top:2px;margin-bottom:2px;margin-left:130%;" />
+                </div>
+      
+   
+    </div>
+
+
+    <div class="row justify-content-center" >
+        <div class="col-12">
+            <div class="section-title text-center mb-4 pb-2">
+
+            </div>
+        </div><!--end col-->
+    </div><!--end row-->
+
+    
+    <div style=" padding:7%; ">
+
+
+            <div class="panel" >
+                <div style=" padding: 3%; display: flex; justify-content: space-evenly;">
+            <div style ="position:relative;">
+                    <a asp-controller="Protokol" asp-action="ProtokolListOgr">
+                <img style="position:relative;" src="~/icon/dosya.png" width="125px" height="110px" />
+                    <div class="label" style="color:black; font-family:Calibri; padding-top:25px; padding-left:20px;  "><b><h4><a style="text-decoration:none;">ÖĞRENCİ</a></h4></b></div>
+
+                </a>
+            </div>
+            <div style="position:relative;">
+                <a asp-controller="Auth" asp-action="Login">
+                    <img style="position:relative;" src="~/icon/sınıf.png" width="125px" height="110px" />
+                    <div class="label" style="color:black; font-family:Calibri;  padding-top:25px; padding-left:20px;  "><b><h4><a style="text-decoration:none;">PERSONEL</a></h4></b></div>
+
+                </a>
+            </div>
+            <div style="position:relative; ">
+                    <a asp-controller="Protokol" asp-action="ProtokolListAllPersonel">
+                    <img style="position:relative;" src="~/icon/kimlik.png" width="125px" height="110px" />
+                    <div class="text" style="color:black; font-family:Calibri;  padding-top:25px; padding-left:20px; "><b><h4><a style="text-decoration:none;">ZİYARETÇİ </a></h4></b></div>
+
+                </a>
+            </div>
+                   
+                </div>
+            </div>
+
+
+    <div style=" padding:3%; display: flex; justify-content: space-between;">
+    
+    </div>
+
+
+   
+</div>

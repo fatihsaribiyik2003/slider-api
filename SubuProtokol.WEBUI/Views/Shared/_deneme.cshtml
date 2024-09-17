@@ -1,0 +1,39 @@
+﻿@model SubuProtokol.WEBUI.Models.ProtokolQuery
+@using SubuProtokol.Core.Enums
+
+<div>
+    <div class="modal-header">
+        <h4 class="modal-title">Detay</h4>
+    </div>
+    <ul>
+        <li style="list-style-type: none;"><b>Protokol İlgili Olduğu  Ana Süreç :</b> @Model.MainSurec.GetDisplayName() </li>
+        <li style="list-style-type: none;"><b>Protokol Ana Türü :</b> @Model.MainType.GetDisplayName() </li>
+        <li style="list-style-type: none;"><b>Protokol Alt Türü :</b> @Model.UnderType.GetDisplayNameUnderType() </li>
+        <li style="list-style-type: none;"><b>Protokol İmzalanan Kurum :</b> @Model.ProtokolImzalananKurum </li>
+        @*<li style="list-style-type: none;"><b>Protokolden Sorumlu Birim :</b> @Model.protokoldensorumlubirim</li>*@
+        <li style="list-style-type: none;"><b>Protokolden Sorumlu Kişi :</b> @Model.ProtokoldenSorumluKisi </li>
+        @{
+            DateTime date = DateTime.Parse(Model.ProtokolStartTime.ToString());
+            string formattedDate = date.ToString("dd.MM.yyy");
+            DateTime datefinish = DateTime.Parse(Model.ProtokolFinishTime.ToString());
+            string formattedDateFinish = datefinish.ToString("dd.MM.yyy");
+
+        }
+        <li style="list-style-type: none;"><b>Protokol Başlangıç Tarihi :</b> @formattedDate</li>
+        <li style="list-style-type: none;"><b>Protokol Bitiş Tarihi :</b>@formattedDateFinish</li>
+        @* <li><span>ProtokolSüresi Otomatik Olarak Uzayacak mı?:</span> @Model.Time </li>*@
+        <li style="list-style-type: none;"><b>Mail/Web :</b> @Model.Email </li>
+        <li style="list-style-type: none;"><b>Protokol İmzalanan Kurum Mail :</b> @Model.EmailImzalananKurum </li>
+        <li style="list-style-type: none; overflow-wrap: break-word;"><b>Konu :</b> @Model.Konu </li>
+        @{
+            if (Model.MainType.ToString() == "İndirimProtokolu")
+            {
+                <li style="list-style-type: none; "><b>İndirim Açıklaması :</b> @Model.indirimAciklamasi </li>
+                @*<li style="list-style-type: none; "><b>Protokolden Sorumlu Birim :</b> @Model.indirimAciklamasi</li>*@
+               
+            }
+        }
+
+    </ul>
+
+</div>

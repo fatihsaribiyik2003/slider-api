@@ -1,0 +1,66 @@
+﻿@using SubuProtokol.Core.Enums
+@model SubuProtokol.WEBUI.Models.ApiUserModel;
+@{
+    ViewData["Title"] = "CreateUser";
+    Layout = "~/Views/Shared/_LayoutFull.cshtml";
+}
+
+<div class="container">
+    <div class="row message-wrapper rounded shadow mb-20">
+        <div class="col-md-12 message-sideright">
+            <div class="panel">
+                @using (Html.BeginForm("CreateUser", "User", FormMethod.Post))
+                {
+
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label asp-for="UserName" class="form-label col-form-label">Kullanıcı Adı</label>
+                            <input asp-for="UserName" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label col-form-label">Role</label>
+                            <select asp-for="UserRole" asp-items="Html.GetEnumSelectList<EnumUserRole>()" class="form-control" style="width: 624px; height: 39px;">
+                            </select>
+                            <span asp-validation-for="UserRole" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label asp-for="FirstName" class="form-label col-form-label"></label>
+                            <input asp-for="FirstName" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="FamilyName" class="form-label col-form-label"></label>
+                            <input asp-for="FamilyName" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label col-form-label"></label>
+                            <input asp-for="Email" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Phone" class="form-label col-form-label"></label>
+                            <input asp-for="Phone" class="form-control">
+                        </div>
+                    </div>
+                   
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <button style="float: right;  " type="submit" class="btn btn-primary">Kaydet</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // TempData'dan veriyi al
+    var message = '@TempData["user"]';
+    // Eğer TempData nesnesi boş değilse uyarı mesajını göster
+    if (message) {
+        alert(message);
+    }
+</script>

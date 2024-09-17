@@ -1,0 +1,63 @@
+﻿
+
+<style>
+    .panel_title_box {
+        height: 101px;
+        width: 312px;
+        border: 5px solid #ffffff;
+        text-align: right !important;
+        padding: 60px 10px 0px 0px !important;
+        font-family: inherit;
+        margin: 5px;
+    }
+</style>
+
+@{
+    Layout = "~/Views/Shared/_LayoutFull.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]  SUBU PROTOKOL</title>
+    <link rel="shortcut icon" href="~/favicon.ico"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/lib/flag-icons/css/flag-icons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" />
+
+
+</head>
+
+<body>
+    <h2>@ViewData["Title"]</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-sm-4  col-md-4 col-4">
+               <a href="/"> <img @*class="branding-bar-img"*@ src="/icon/LOGO.png" align="left" style="width=" 15" height="130" float: leftmargin-lefter:1px; margin-top:2px;margin-bottom:2px;" /> </a>
+               </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-4 branding-bar-btn">
+                <a href="https://kesfet.subu.edu.tr" target="_blank" style="background: #20A953 0% 0% no-repeat padding-box;color: #FFFFFF; margin-top:auto;border-radius:25px;
+                                     padding:14px 25px;display:inline-block;text-align:center;height:45px; width:180px;   margin-left: 10%;     text-decoration:none;
+                      margin-right:10%;  margin-top:9%;        margin-bottom:20px;  font-size:14px ;  font-weight: bold;
+               ">SUBÜ'YÜ KEŞFET</a>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-4 branding-bar-motto">
+                <img src="/icon/MOTTO.png" style="width=" 15" height="130" float: right; border:1px; margin-top:2px;margin-bottom:2px;margin-left:130%;" />
+            </div>
+        </div>
+        <br />
+        <br/>
+        <br/>
+        <div class="container">
+            <div class="d-flex justify-content-around">
+                <a class="btn btn-danger panel_title_box" asp-controller="ProtokolAdmin" asp-action="Index">Protokol Listesi</a>
+                <a class="btn btn-primary panel_title_box" asp-controller="ProtokolAdmin" asp-action="ProtokolCreate">Protokol Ekle</a>
+                <a class="btn btn-info panel_title_box" asp-controller="User" asp-action="GetAllUser">Kullanıcılar</a>
+            </div>
+        </div>
+        </div>
+</body>
+</html>

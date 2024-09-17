@@ -1,0 +1,57 @@
+﻿@using SubuProtokol.Core.Enums
+@model SubuProtokol.WEBUI.Models.ApiUserModel;
+@{
+    ViewData["Title"] = "EditUser";
+    Layout = "~/Views/Shared/_LayoutFull.cshtml";
+    var UserRoleSelectListItems = (SelectList)ViewData["UserRoleSelectListItems "];
+}
+
+<div class="container">
+    <div class="row message-wrapper rounded shadow mb-20">
+        <div class="col-md-12 message-sideright">
+            <div class="panel">
+
+                @using (Html.BeginForm("EditUser", "User", FormMethod.Post))
+                {
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label asp-for="UserName" class="form-label col-form-label"></label>
+                            <input asp-for="UserName" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label col-form-label">Role</label>
+                            @Html.DropDownListFor(Model => Model.UserRole, Enum.GetValues(typeof(EnumUserRole)).Cast<EnumUserRole>().Select(x => new SelectListItem { Value = ((int)(EnumUserRole)x).ToString(), Text = x.ToString() }), "Seçim yapınız",new{style="width:624px;height:39px;"})
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label asp-for="FirstName" class="form-label col-form-label"></label>
+                            <input asp-for="FirstName" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="FamilyName" class="form-label col-form-label"> </label>
+                            <input asp-for="FamilyName" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label col-form-label"></label>
+                            <input asp-for="Email" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Phone" class="form-label col-form-label"></label>
+                            <input asp-for="Phone" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <button style="float: right;  " type="submit" class="btn btn-primary">Kaydet</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

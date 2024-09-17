@@ -1,0 +1,500 @@
+﻿@using Newtonsoft.Json
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@model IPagedList<SubuProtokol.WEBUI.Models.ProtokolQuery>
+@using SubuProtokol.Core.Enums;
+
+
+<style>
+    .container-fluid {
+        width: 100%;
+        padding-right: 100px !important;
+        padding-left: 100px !important;
+        margin-right: auto;
+        margin-left: auto;
+</style>
+@{
+    Layout = "~/Views/Shared/_LayoutFull.cshtml";
+    /*ViewData["protokolekle"] = "PROTOKOL LİSTESİ";*/
+
+    var EnumSelectItemList_1 = (SelectList)ViewData["EnumSelectItemList_1"];
+    var sectorId = ViewData["sectorId"];
+
+    var EnumSelectItemList = (SelectList)ViewData["EnumSelectItemList"];
+    var departmantTypeId = ViewData["departmantTypeId"];
+
+    var EnumSelectItemList_ = (SelectList)ViewData["EnumSelectItemList_"];
+    var scopeId = ViewData["scopeId"];
+    var enumselectlist_2 = (SelectList)ViewData["enumSelectItemList_2"];
+    var userdata_ = @ViewData["userdata"];
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+    var filter = ViewBag.CurrentPage;
+    var startdate = ViewBag.StartDate;
+    var enddate = ViewBag.EndDate;
+
+    var deneme = filter;
+
+}
+
+<h1>@ViewData["Title"]</h1>
+<div class="container-xl ">
+    <div class="row message-wrapper rounded shadow mb-20" style="margin-bottom: 10px;margin-top: 5px;  box-shadow:0 0 !important;">
+        <div>
+            <div class="input-group mb-3" style="padding: 0 0 0 130px; ">
+
+
+                <div class="input-group-append">
+                    <a href="@Url.Action("Index", "ProtokolAdmin" , new { Area = "Admin" ,  MainType =(int)EnumProtokolMainType.DegisimProgrami })" class="btn btn-block"> <b> Değişim Programı</b></b></a>
+                </div>
+
+                <div class="input-group-append">
+                    <a href="@Url.Action("Index", "ProtokolAdmin", new { MainType =(int)EnumProtokolMainType.EgitimBelgelendirme })" class="btn btn-block"> <b>Eğitim ve Belgelendirme</b></a>
+                </div>
+                <div class="input-group-append">
+                    <a href="@Url.Action("Index", "ProtokolAdmin", new { MainType =(int)EnumProtokolMainType.GenelIsbirligi })" class="btn btn-block"> <b>Genel İşbirliği</b></a>
+                </div>
+                <div class="input-group-append">
+                    <a href="@Url.Action("Index", "ProtokolAdmin", new { MainType =(int)EnumProtokolMainType.UniversiteIsDunyasiIsbirligi})" class="btn btn-block"><b>Üniversite iş Dünyası İş birliği</b></a>
+                </div>
+                <div class="input-group-append">
+                    <a href="@Url.Action("Index", "ProtokolAdmin", new { MainType =(int)EnumProtokolMainType.Danismanlik })" class="btn btn-block"><b> Danışmanlık</b></a>
+                </div>
+
+
+                <div class="input-group-append">
+                    <a href="@Url.Action("Index", "ProtokolAdmin", new { MainType =(int)EnumProtokolMainType.IndirimProtokolu})" class="btn btn-block"><b> İndirim Protokolü</b></a>
+                </div>
+
+                <div class="input-group-append">
+                    <a href="@Url.Action("Index", "ProtokolAdmin", new { MainType ="10" })" class="btn btn-block"><b>Tümü</b></a>
+                </div>
+
+            </div>
+
+            @using (Html.BeginForm("Index", "ProtokolAdmin", FormMethod.Post))
+            {
+                <div class="row mb-1">
+                    <div class="col-4">
+                        <label class="form-label"><b>Protokol İmza Tarihi</b></label>
+                        <input type="date" class="form-control" id="Tarih1" name="Tarih1" placeholder="Tarih1" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label"><b>Protokol Bitiş Tarihi</b></label>
+                        <input type="date" class="form-control" id="Tarih2" name="Tarih2" placeholder="Tarih2" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label"><b>Kurum Adı</b></label>
+                        <input type="text" class="form-control" id="KurumAdi" name="KurumAdi" placeholder="KurumAdi" />
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary me-1 findBtn" style="float:right;">Ara</button>
+                    </div>
+                </div>
+            }
+            <div class="col-12" style="display: flex; flex-direction: row-reverse; padding-top:15px;">
+                <button id="export-btn" class="btn btn-success btn-sm">Excel Çıktı Al</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div @*class="row message-wrapper rounded shadow mb-20"*@>
+
+        <div id="resultDiv" class="col-xl-12">
+        <div id="Dilara"></div>
+        <div id="Karaca"></div>
+
+
+            <table class="table-responsive-xl table table-striped">
+                <thead>
+                    <tr>
+                        @*<th scope="col">ID</th>*@
+                        <th scope="col">Protokol  Türü</th>
+                        <th scope="col">Protokol  Ana Süreç</th>
+                        <th scope="col">Protokol İmzalanan Kurum</th>
+                        <th scope="col">Protokol Alt Türü</th>
+                        <th scope="col">Protokoden Sorumlu Kişi</th>
+                        <th scope="col">Protokolden Sorumlu Birim</th>
+                        <th scope="col">Konusu</th>
+                        <th scope="col">Protokol Oluşturulma Tarihi</th>
+                        <th scope="col">Protokol Bitiş Tarihi</th>
+                        <th scope="col">Protokol Sektör</th>
+                        <th scope="col">Geçerlilik Süresi</th>
+                        <th scope="col">Protokol Dosyası</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+
+
+
+
+                    </tr>
+                </thead>
+                <tbody id="DataSearching">
+                    @*{
+                        var i = 0;
+                        var j = 0;
+                        if (filter != null && filter > 1)
+                        {
+                            j = filter * 10;
+                        }
+                        else if (filter == 1)
+                        {
+                            j = 0;
+                        }
+                    }*@
+                    @foreach (var item in Model)
+                    {
+
+                        <tr>
+                            @*if (j != null)
+                            {
+                                j++;
+                                <td>@j</td>
+                            }
+                            else
+                            {
+                                i++;
+                                <td>@i</td>
+                            }*@
+
+                            <td>@item.MainType.GetDisplayName()</td>
+                            <td>@item.MainSurec.GetDisplayName()</td>
+                            <td>@item.ProtokolImzalananKurum</td>
+                            <td>@item.UnderType.GetDisplayName()</td>
+                            <td>@item.ProtokoldenSorumluKisi</td>
+                            <td>@item.UnitName</td>
+                            <td>
+                                @{
+                                    if (item.Konu != null)
+                                    {
+                                        if (item.Konu.Length > 25)
+                                            @Html.Raw(item.Konu.Substring(0, 25) + "...")
+                                        else
+                                            @Html.Raw(item.Konu)
+                                    }
+                                    else
+                                    {
+                                        @:<text></text>
+                                    }
+                                }
+                            </td>
+                            @{
+                                DateTime date = DateTime.Parse(item.ProtokolStartTime.ToString());
+                                string formattedDate = date.ToString("dd.MM.yyy");
+                                DateTime datefinish = DateTime.Parse(item.ProtokolFinishTime.ToString());
+                                string formattedDateFinish = datefinish.ToString("dd.MM.yyy");
+                            }
+                            <td>@formattedDate</td>
+                            <td>@formattedDateFinish</td>
+                            <td>@item.Sector</td>
+                            <td>@item.Time</td>
+
+                            <td>
+                                @if (item.FileKey != null)
+                                {
+                                    var urlAdresi = item.FileKey.Substring(3);
+                                    <span>Yüklenen dosyayı indirmek için <a href="https://dl.sabis.subu.edu.tr/u/@urlAdresi" download target="_blank">Tıklayınız</a> </span>
+
+                                }
+                            </td>
+
+
+
+
+                            @*<td>
+
+                        </td>*@
+                            <td>
+
+                                <a class="btn btn-warning" asp-controller="ProtokolAdmin" asp-action="UpdateProtokolById" asp-route-id="@item.Id">Düzenle</a>
+
+                            </td>
+                            <td>
+
+                                <button class="btn btn-danger deleteBtn" data-id="@item.Id">Sil</button>
+
+
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <hr>
+
+
+
+
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { Page = page , Tarih1 = startdate, Tarih2 = enddate, KurumAdi=ViewBag.KurumAdi  }),  new PagedListRenderOptions
+    {
+    PageClasses = new string[] { "page-link" },
+    UlElementClasses = new string[] { "pagination" },
+    LiElementClasses = new string[] { "page-item" },
+
+    })
+
+
+
+
+</div>
+
+@section Scripts{
+    <script src="~/js/excelexport.js"></script>
+
+    <script>
+
+        function detailPage() {
+            let secilenYilBilgisi = @Html.Raw(JsonConvert.SerializeObject(ViewBag.SecilenYilBilgisi));
+            let oncekiYilBilgisi = @Html.Raw(JsonConvert.SerializeObject(ViewBag.OncekiYillar));
+
+            if(secilenYilBilgisi != null && oncekiYilBilgisi != null) {
+                $('#Dilara').text(secilenYilBilgisi);
+                $('#Karaca').text(oncekiYilBilgisi);
+            }
+
+            let firstDate = @Html.Raw(JsonConvert.SerializeObject(ViewBag.StartDate));
+            let secondDate = @Html.Raw(JsonConvert.SerializeObject(ViewBag.EndDate));
+            let kurumAdi1 = @Html.Raw(JsonConvert.SerializeObject(ViewBag.KurumAdi));
+
+            if (firstDate != undefined && secondDate != undefined) {
+                $("input[id=Tarih1]").val(firstDate);
+                $("input[id=Tarih2]").val(secondDate);
+            }
+            if (kurumAdi1 != undefined) {
+                $("input[id=KurumAdi]").val(kurumAdi1);
+            }
+
+            let dataVal = @Html.Raw(JsonConvert.SerializeObject(ViewBag.data));
+            $('#export-btn').click(function () {
+                $('.table').excelexportjs({
+                    containerid: "null",
+                    datatype: "json",
+                    dataset: sanitizeJSON(dataVal),
+                    columns: getColumns(dataVal)
+                });
+            });
+
+            let EnumDepartmentType = @Html.Raw(JsonConvert.SerializeObject(ViewBag.EnumDepartmentType));
+            let EnumMainSurec = @Html.Raw(JsonConvert.SerializeObject(ViewBag.EnumMainSurec));
+            let EnumMainType = @Html.Raw(JsonConvert.SerializeObject(ViewBag.EnumMainType));
+            let EnumScope = @Html.Raw(JsonConvert.SerializeObject(ViewBag.EnumScope));
+            let EnumSector = @Html.Raw(JsonConvert.SerializeObject(ViewBag.EnumSector));
+            let EnumUnderType = @Html.Raw(JsonConvert.SerializeObject(ViewBag.EnumUnderType));
+            let Units = @Html.Raw(JsonConvert.SerializeObject(ViewBag.Units));
+
+            function sanitizeJSON(obj) {
+                for (let key in obj) {
+                	if(obj[key]["Time"] == 1) {
+                    	obj[key]["Time"] = "Evet";
+                    } else {
+                    	obj[key]["Time"] = "Hayır";
+                    }
+
+                    if(obj[key]["DepartmantType"]) {
+                        obj[key]["DepartmantType"] = EnumDepartmentType.find(item => item.Id == obj[key]["DepartmantType"]).Name;
+                    } else obj[key]["DepartmantType"] = '';
+
+                    if(obj[key]["MainSurec"]) {
+                        obj[key]["MainSurec"] = EnumMainSurec.find(item => item.Id == obj[key]["MainSurec"]).Name;
+                    } else obj[key]["MainSurec"] = '';
+
+                    if(obj[key]["MainType"]) {
+                        obj[key]["MainType"] = EnumMainType.find(item => item.Id == obj[key]["MainType"]).Name;
+                    } else obj[key]["MainType"] = '';
+
+                    if(obj[key]["Scope"]) {
+                        obj[key]["Scope"] = EnumScope.find(item => item.Id == obj[key]["Scope"]).Name;
+                    } else obj[key]["Scope"] = '';
+
+                    if (obj[key]["Sector"]) {
+                        obj[key]["Sector"] = EnumSector.find(item => item.Id == obj[key]["Sector"]).Name;
+                    } else obj[key]["Sector"] = '';
+
+                    if(obj[key]["UnderType"]) {
+                        obj[key]["UnderType"] = EnumUnderType.find(item => item.Id == obj[key]["UnderType"]).Name;
+                    } else obj[key]["UnderType"] = '';
+
+                    if (obj[key]["UnitId"]) {
+                        obj[key]["UnitId"] = Units.find(item => item.Id == obj[key]["UnitId"]).Name;
+                    } else obj[key]["UnitId"] = '';
+                    
+                    obj[key]["ProtokolFinishTime"] = (new Date(obj[key]["ProtokolFinishTime"])).toLocaleDateString();
+                    obj[key]["ProtokolStartTime"] = (new Date(obj[key]["ProtokolStartTime"])).toLocaleDateString();
+
+                    if (obj[key] === null) {
+                        obj[key] = '';
+                    } 
+                   
+                    if (typeof obj[key] === 'string') {
+                        obj[key] = obj[key].replace(/<[^>]*>/g, '').trim();
+                    }
+                }
+                return obj;
+            }
+
+            function get_query() {
+                var url = document.location.href;
+                var qs = url.substring(url.indexOf('?') + 1).split('&');
+                for (var i = 0, result = {}; i < qs.length; i++) {
+                    qs[i] = qs[i].split('=');
+                    result[qs[i][0]] = decodeURIComponent(qs[i][1]);
+                }
+                return result;
+            }
+
+            var urlParams = get_query();
+            if (urlParams.Tarih1 != undefined && urlParams.Tarih2 != undefined) {
+                $("input[id=Tarih1]").val(urlParams.Tarih1);
+                $("input[id=Tarih2]").val(urlParams.Tarih2);
+            }
+            if (urlParams.KurumAdi != undefined) {
+                $("input[id=KurumAdi]").val(urlParams.KurumAdi);
+            }
+           
+            $("#SearchBtn").click(function () {
+                var SearchBy = $("#SearchBy").val();
+                var SearchValue = $("#Ara").val();
+                var SetData = $("#DataSearching");
+                SetData.html("");
+                $.ajax({
+                    type: "post",
+                    url: "/ProtokolAdmin/GetSearchingData?SearchValue=" + SearchValue,
+                    contentType: "json",
+                    success: function (result) {
+
+                        if (result.length == 0) {
+                            SetData.append('<tr style="color:red"><td colspan="3">Eşleşen Veri Yok. Büyük-küçük harf duyarlı olarak arama yapılmaktadır.</td></tr>')
+                        }
+                        else {
+                            let i = 1;
+                            $.each(result, function (index, value) {
+
+                                var maint = $("#maintypetag").val();
+                                let formnesnesi = parseInt(maint);
+                                var maintype = null;
+                                var mainsurec = null;
+                                var Sektor = null;
+                                var GecerlilikSuresi = 'Hayır';
+                                var UnderType = null;
+                                if (value.mainType == "1") {
+                                    maintype = "Eğitim ve BelgelendirmeEğitim ve Belgelendirme";
+                                } else if (value.mainType == "2") {
+                                    maintype = "Genel İşbirliği";
+                                } else if (value.mainType == "3") {
+                                    maintype = "Değişim Programı";
+                                } else if (value.mainType == "4") {
+                                    maintype = "İndirim Protokolü";
+                                } else if (value.mainType == "5") {
+                                    maintype = "Üniversite-İş Dünyası İşbirliği";
+                                } else if (value.mainType == "6") {
+                                    maintype = "Danışmanlık";
+                                }
+                                if (value.mainSurec == "1") {
+                                    mainsurec = "Eğitim ve Öğretim";
+                                } else if (value.mainSurec == "2") {
+                                    mainsurec = "Ar-Ge";
+                                } else if (value.mainSurec == "3") {
+                                    mainsurec = "Uygulama ve Topluma Hizmet";
+                                } else if (value.mainSurec == "4") {
+                                    mainsurec = "İdari ve Destek";
+                                } else if (value.mainSurec == "5") {
+                                    mainsurec = "Tüm Süreçler";
+                                } else {
+                                    mainsurec = null;
+                                }
+                                if (value.sector == "1") {
+                                    Sektor = "Kamu";
+                                } else {
+                                    Sektor = "Özel";
+                                }
+                                if (value.underType == "1") {
+                                    UnderType = "Eğitim, Sınav ve Belgelendirme";
+                                } else if (value.underType == "2") {
+                                    UnderType = "Mesleki Eğitim Kursları";
+                                } else if (value.underType == "3") {
+                                    UnderType = "Genel Çerçeve";
+                                } else if (value.underType == "4") {
+                                    UnderType = "Erasmus Değişim Programı";
+                                } else if (value.underType == "5") {
+                                    UnderType = "Farabi Değişim Programı";
+                                } if (value.underType == "6") {
+                                    UnderType = "Mevlana Değişim Programı";
+                                } else if (value.underType == "7") {
+                                    UnderType = "Ürün/Hizmet İndirimi";
+                                } else if (value.underType == "8") {
+                                    UnderType = "İşletmede Mesleki Eğitim(+1)";
+                                } else if (value.underType == "9") {
+                                    UnderType = "Kurumsal Kaynak Paylaşımı";
+                                } else if (value.underType == "10") {
+                                    UnderType = "Sosyal & Kültürel Dayanışma";
+                                } else if (value.underType == "11") {
+                                    UnderType = "Mutabakat Zaptı";
+                                } else {
+                                    UnderType = "Diğer";
+                                }
+
+                                if (value.time) {
+                                    GecerlilikSuresi = 'Evet';
+                                }
+
+                                var Data = "<tr>" +
+                                    "<td>" + i + "</td>" +
+                                    "<td>" + maintype + "</td>" +
+                                    "<td>" + mainsurec + "</td>" +
+                                    "<td>" + value.protokolImzalananKurum + "</td>" +
+                                    "<td>" + UnderType + "</td>" +
+                                    "<td>" + value.protokoldenSorumluKisi + "</td>" +
+                                    "<td>" + value.unitName + "</td>" +
+                                    "<td>" + (value.konu != null ? value.konu.length > 50 ? value.konu.substring(0, 50) + "..." : value.konu : "") + "</td>" + 
+                                    "<td>" + value.protokolStartTime + "</td>" +
+                                    "<td>" + value.protokolFinishTime + "</td>" +
+                                    "<td>" + Sektor + "</td>" +
+                                    "<td>" + GecerlilikSuresi + "</td>" +
+                                    "<td><a href='" + value.fileKey + "' target='_blank'>Tıklayınız</a></td>" +
+                                    "<td><a class='btn btn-warning' href='/" + value.id + "'>Düzenle</a > </td>" +
+                                    '<td><button class="btn btn-danger deleteBtn" data-id="' + value.id + '">Sil</button></td>' +
+                                    "</tr>";
+                                SetData.append(Data);
+                                i++;
+                            });
+                        }
+                    }
+                });
+            });
+            $('.deleteBtn').click(function () {
+                if (confirm("Kaydı silmek istediğinize eminmisiniz?")) {
+                    $.ajax({
+                        method: 'Delete',
+                        url: '/ProtokolAdmin/Delete',
+                        data: { id: $(this).attr('data-id') },
+                        statusCode: {
+                            200: function () {
+                                alert("Kayıt silindi.");
+                                location.replace(location.href);
+                            },
+                            500: function () {
+                                alert("Kayıt silinemedi!");
+                            }
+                        }
+                    });
+                }
+            })
+        }
+        $(function () {
+            detailPage();
+        });
+    </script>
+
+}

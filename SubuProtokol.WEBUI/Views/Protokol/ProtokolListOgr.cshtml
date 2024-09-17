@@ -1,0 +1,296 @@
+﻿@*{
+    var role = User.Claims.FirstOrDefault(q => q.Type == System.Security.Claims.ClaimTypes.Role);
+    var roleValue = role != null ? role.Value : "";
+}*@
+@*@model IEnumerable<subuprotokol.Core.Models.ViewModels.Protokol.ProtokolResponseViewModel>*@
+@using SubuProtokol.Core.Enums
+
+@model IPagedList<SubuProtokol.WEBUI.Models.ProtokolQuery>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@{
+    //Layout = "~/Views/Shared/_LayoutFull.cshtml";
+    //<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+    //<!-- Include all compiled plugins (below), or include individual files as needed -->
+    //<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+    //var enumselectlist = (SelectList)ViewData["enumSelectItemList"];
+    var enumselectlist_1 = (SelectList)ViewData["enumSelectItemList_1"];
+    var enumselectlist_2 = (SelectList)ViewData["enumSelectItemList_2"];
+    var enumselectlist_3 = (SelectList)ViewData["enumSelectItemList_3"];
+    var enumselectlist_4 = (SelectList)ViewData["enumSelectItemList_4"];
+    var filter = ViewBag.CurrentPage;
+    var deneme = filter;
+    var maintype = ViewData["MainType"];
+}
+
+
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-lg-4 col-sm-4  col-md-4 col-4">
+        <a href="/"> <img @*class="branding-bar-img"*@ src="/icon/LOGO.png" align="left" style="width=" 15" height="130" float: leftmargin-lefter:1px; margin-top:2px;margin-bottom:2px;" /> </a>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4 col-4 branding-bar-btn">
+        <a href="https://kesfet.subu.edu.tr" target="_blank" style="background: #20A953 0% 0% no-repeat padding-box;color: #FFFFFF; margin-top:auto;border-radius:25px;
+                                     padding:14px 25px;display:inline-block;text-align:center;height:45px; width:180px;   margin-left: 10%;     text-decoration:none;
+                      margin-right:10%;  margin-top:9%;        margin-bottom:20px;  font-size:14px ;  font-weight: bold;
+           ">SUBÜ'YÜ KEŞFET</a>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-4 col-4 branding-bar-motto">
+        <img src="/icon/MOTTO.png" style="width=" 15" height="130" float: right; border:1px; margin-top:2px;margin-bottom:2px;margin-left:130%;" />
+    </div>
+
+
+</div>
+
+
+
+
+<div class="row message-wrapper rounded shadow mb-20" style="margin-bottom: 30px;margin-top: 30px;">
+
+    <div class="col-md-12 message-sideright">
+
+
+
+        <div class="panel">
+            <div class="input-group mb-3" style="    padding: 5px 0 0 0 ;">
+                
+                <div class="input-group-append">
+                    <a href="@Url.Action("ProtokolListOgr", "Protokol", new { MainType="10" }))" class="btn btn-block" id="btn" onclick="this.style.background = 'red'"> <img src="/img/home.svg" height="25" width="25" />&nbsp;Anasayfa</a>
+                </div>
+
+                <div class="input-group-append">
+                    <a href="@Url.Action("ProtokolListOgr", "Protokol", new { MainType =(int)EnumProtokolMainType.DegisimProgrami })" class="btn btn-block" id="btn" onclick="this.style.background = 'red'"> Değişim Programı</a>
+                </div>
+
+                <div class="input-group-append">
+                    <a href="@Url.Action("ProtokolListOgr", "Protokol", new { MainType =(int)EnumProtokolMainType.EgitimBelgelendirme })" class="btn btn-block" id="btn" onclick="this.style.background = 'red'"> Eğitim ve Belgelendirme</a>
+                </div>
+                <div class="input-group-append">
+                    <a href="@Url.Action("ProtokolListOgr", "Protokol", new { MainType =(int)EnumProtokolMainType.GenelIsbirligi })" class="btn btn-block" id="btn" onclick="this.style.background = 'red'"> Genel İşbirliği</a>
+                </div>
+                <div class="input-group-append">
+                    <a href="@Url.Action("ProtokolListOgr", "Protokol", new { MainType =(int)EnumProtokolMainType.UniversiteIsDunyasiIsbirligi })" class="btn btn-block" id="btn" onclick="this.style.background = 'red'"> Üniversite iş Dünyası İş birliği</a>
+                </div>
+
+                <div class="input-group-append">
+                    <a href="@Url.Action("ProtokolListOgr", "Protokol", new { MainType =(int)EnumProtokolMainType.Danismanlik })" class="btn btn-block" id="btn" onclick="this.style.background = 'red'"> Danışmanlık</a>
+                </div>
+            </div>
+        </div>
+
+    
+        <div class="row offset-7" style="">
+            <div class="col-6 col-sm-6" style="text-align: right;">
+                <b>Kurum Adı : </b>
+            </div>
+            <div class="col-6 col-sm-6">
+                @Html.TextBox("Ara", null, new { onkeydown = "if(event.keyCode == 13) { event.preventDefault(); document.getElementById('SearchBtn').click(); }" })
+                <input  type="submit" id="SearchBtn" value="Ara" style="display:none;">
+            </div>
+        </div>
+        <br />
+
+
+        <div class="row message-wrapper rounded shadow mb-20">
+
+            <div class="col-md-12">
+                <div class="card">
+
+                    <div class="card-body">
+
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th scope="col">PROTOKOL TÜRÜ</th>
+                                    <th scope="col"> PROTOKOL ANA SÜREÇ</th>
+                                    <th scope="col">KURUM ADI</th>
+                                    <th scope="col">KONU</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody id="DataSearching">
+                                @{
+                                    var i = 0;
+                                    var j = 0;
+                                    if (filter != null && filter > 1)
+                                    {
+                                        j = filter * 10;
+                                    }
+                                    else if (filter == 1)
+                                    {
+                                        j = 0;
+                                    }
+                                }
+                                @foreach (var item in Model.ToPagedList())
+                                {
+                                    <tr>
+                                        @if (j != null)
+                                        {
+                                            j++;
+                                            <td>@j</td>
+                                        }
+                                        else
+                                        {
+                                            i++;
+                                            <td>@i</td>
+                                        }
+                                        <td>
+                                            @item.MainType.GetDisplayName()
+                                        </td>
+                                        <td>   @item.MainSurec.GetDisplayName() </td>
+                                        <td> @item.ProtokolImzalananKurum</td>
+                                        <td> @{
+                                                if(item.Konu != null) {
+                                                    if (item.Konu.Length > 50) {
+                                                        @item.Konu.Substring(0, 50);
+                                                    } else {
+                                                        @item.Konu;
+                                                    }
+                                                } else {
+                                                    Html.Raw("");
+                                                }
+                                        }</td>
+
+
+                                        <td>
+                                            @*<button class="btn btn-warning btn-sm" value="@item.Id" id="idparametre"  onclick="location.href ='@Url.Action("ProtokolListPartial","Protokol")?tid=' + document.getElementById('idparametre').value">Detay</button>
+                                        *@
+                                            <a class="btn btn-warning btn-sm" id="@item.Id" onclick="Details(this.id)">Detay</a>
+
+
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+
+
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+
+            </div>
+            <div class="col-md-12 message-sideright">
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title"></h4>
+                            </div>
+                            <div class="modal-body">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+                @Html.PagedListPager((IPagedList)Model, page => Url.Action("ProtokolListOgr", new { Page = page, maintype }), new PagedListRenderOptions
+                {
+                PageClasses = new string[] { "page-link" },
+                UlElementClasses = new string[] { "pagination" },
+                LiElementClasses = new string[] { "page-item" },
+                })
+
+            </div>
+        </div>
+    </div>
+
+    @section scripts{
+        <script src="~/js/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script>
+            function Details(id) {
+                $.get("@Url.Action("ProtokolListPartial", "Protokol")/" + id,
+                    function (data) {
+                        $('.modal-body').html(data);
+                    });
+
+                $("#myModal").modal("show");
+            }
+
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#SearchBtn").click(function () {
+                    var SearchBy = $("#SearchBy").val();
+                    var SearchValue = $("#Ara").val();
+                    var SetData = $("#DataSearching");
+                    $.ajax({
+                        type: "POST",
+                        url: "/Protokol/GetSearchingDataOgr?SearchValue=" + SearchValue,
+                        contentType: "json",
+                        success: function (result) {
+                            $('.pagination-container').empty();
+                            SetData.empty();
+                            if (result.length == 0) {
+                                SetData.append('<tr style="color:red"><td colspan="3">Eşleşen Veri Yok. Büyük-küçük harf duyarlı olarak arama yapılmaktadır.</td></tr>')
+                            }
+                            else {
+                                let i = 1;
+                                $.each(result, function (index, value) {
+
+                                    var maint = $("#maintypetag").val();
+                                    let formnesnesi = parseInt(maint);
+                                    var maintype = null;
+                                    var mainsurec = null;
+                                    if (value.mainType == "1") {
+                                        maintype = "Eğitim ve BelgelendirmeEğitim ve Belgelendirme";
+                                    } else if (value.mainType == "2") {
+                                        maintype = "Genel İşbirliği";
+                                    } else if (value.mainType == "3") {
+                                        maintype = "Değişim Programı";
+                                    } else if (value.mainType == "4") {
+                                        maintype = "İndirim Protokolü";
+                                    } else if (value.mainType == "5") {
+                                        maintype = "Üniversite-İş Dünyası İşbirliği";
+                                    } else if (value.mainType == "6") {
+                                        maintype = "Danışmanlık";
+                                    }
+                                    if (value.mainSurec == "1") {
+                                        mainsurec = "Eğitim ve Öğretim";
+                                    } else if (value.mainSurec == "2") {
+                                        mainsurec = "Ar-Ge";
+                                    } else if (value.mainSurec == "3") {
+                                        mainsurec = "Uygulama ve Topluma Hizmet";
+                                    } else if (value.mainSurec == "4") {
+                                        mainsurec = "İdari ve Destek";
+                                    } else if (value.mainSurec == "5") {
+                                        mainsurec = "Tüm Süreçler";
+                                    } else {
+                                        mainsurec = null;
+                                    }
+                                    var Data = "<tr>" +
+                                        "<td>" + i + "</td>" +
+                                        "<td>" + maintype + "</td>" +
+                                        "<td>" + mainsurec + "</td>" +
+                                        "<td>" + value.protokolImzalananKurum + "</td>" +
+                                        "<td>" + (value.konu != null ? value.konu.length > 50 ? value.konu.substring(0, 50) + "..." : value.konu : "") + "</td>" + 
+                                        "<td><a class=\"btn btn-warning btn - sm\" onclick=\"Details(" + value.id + ")  \"> Detay </a></td > " +
+                                        "</tr>";
+                                    SetData.append(Data);
+                                    i++;
+                                });
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
+    }
+
+
+
+
+
+
+
